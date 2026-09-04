@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { updateAmigurumi } from "@/lib/api"
 import { Amigurumi } from "@/types"
+import { getSession } from "next-auth/react"
 
 export default function EditForm({ amigurumi }: { amigurumi: Amigurumi }) {
     const router = useRouter()
@@ -30,9 +31,15 @@ export default function EditForm({ amigurumi }: { amigurumi: Amigurumi }) {
         }
 
         try {
-            await updateAmigurumi(amigurumi.id, data)
+            const session = await getSession()
+            console.log("Sessão atual:", session) // Adicione esta linha
+            const token = (session as any)?.id_token
+
+            if (!token) throw new Error("Você precisa estar logado.")
+
+            await updateAmigurumi(amigurumi.id, data, token)
             router.refresh()
-            router.push(`/work/${amigurumi.id}`) // Volta para a página de detalhes do projeto
+            router.push(`/work/${amigurumi.id}`)
         } 
         catch (error) {
             console.error(error)

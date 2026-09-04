@@ -3,30 +3,37 @@ import { getAmigurumiByID } from "@/lib/api"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import DeleteButton from "./DeleteButton"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 
 export default async function ProjetoDetalhes({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const amigurumi = await getAmigurumiByID(id)
 
+  const session = await getServerSession(authOptions)
+  const isAdmin = session?.user?.email === process.env.ADMIN_EMAIL
+
   return (
     <main className="container mx-auto p-8 max-w-5xl">
       <div className="flex justify-between items-center mb-8 -ml-4">
         <Link 
-          href="/" 
+          href="/galeria" 
           className={buttonVariants({ variant: "ghost" })}
         >
           ← Voltar para a galeria
         </Link>
 
-        <div className="flex gap-2">
-          <Link 
-            href={`/work/${amigurumi.id}/edit`} 
-            className={buttonVariants({ variant: "outline" })}
-          >
-            Editar
-          </Link>
-          <DeleteButton id={amigurumi.id} />
-        </div>
+        {isAdmin && (
+          <div className="flex gap-2">
+            <Link 
+              href={`/work/${amigurumi.id}/edit`} 
+              className={buttonVariants({ variant: "outline" })}
+            >
+              Editar
+            </Link>
+            <DeleteButton id={amigurumi.id} />
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createAmigurumi } from "@/lib/api"
+import { getSession } from "next-auth/react"
 
 export default function NovoProjeto() {
     const router = useRouter()
@@ -30,7 +31,11 @@ export default function NovoProjeto() {
         }
 
         try {
-            await createAmigurumi(data)
+            const session = await getSession()
+            const token = (session as any)?.id_token
+            if (!token) throw new Error("Você precisa estar logado.")
+
+            await createAmigurumi(data, token)
             router.refresh()
             router.push("/")
         } 
