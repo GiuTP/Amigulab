@@ -9,7 +9,7 @@ import (
 
 func Create(ctx context.Context, amiguruimi *models.Amigurumi) error {
 	query := `
-		INSERT INTO amigurimis (name, image_url, difficulty, satisfaction, time_spent_hours, materials, story)
+		INSERT INTO amigurumis (name, image_url, difficulty, satisfaction, time_spent_hours, materials, story)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING id, created_at
 	`
@@ -73,7 +73,7 @@ func GetAll(ctx context.Context, limit, offset int) ([]models.Amigurumi, error) 
 
 	defer rows.Close()
 
-	var amigurimis []models.Amigurumi
+	var amigurumis []models.Amigurumi
 
 	for rows.Next() {
 		var a models.Amigurumi
@@ -92,23 +92,23 @@ func GetAll(ctx context.Context, limit, offset int) ([]models.Amigurumi, error) 
 			return nil, fmt.Errorf("Erro ao escanear linha: %w", err)
 		}
 
-		amigurimis = append(amigurimis, a)
+		amigurumis = append(amigurumis, a)
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil, fmt.Errorf("Erro durante iteração das linhas: %w", err)
 	}
 
-	if amigurimis == nil {
-		amigurimis = []models.Amigurumi{}
+	if amigurumis == nil {
+		amigurumis = []models.Amigurumi{}
 	}
 
-	return amigurimis, nil
+	return amigurumis, nil
 }
 
 func Update(ctx context.Context, a *models.Amigurumi) error {
-	query := `i
-		UPDATE amigurimis
+	query := `
+		UPDATE amigurumis
 		SET name = $1, image_url = $2, difficulty = $3, satisfaction = $4, time_spent_hours = $5, materials = $6, story = $7
 		WHERE id = $8
 	`
@@ -135,7 +135,7 @@ func Update(ctx context.Context, a *models.Amigurumi) error {
 
 func Delete(ctx context.Context, id string) error {
 	query := `
-		DELETE FROM amigurimis
+		DELETE FROM amigurumis
 		WHERE id = $1
 	`
 
