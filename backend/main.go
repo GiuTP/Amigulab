@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"amigulab/backend/internal/database"
 	"amigulab/backend/internal/handlers"
@@ -12,7 +14,36 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
+	"google.golang.org/api/idtoken"
 )
+
+func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer") {
+			http.Error(w, "Token ausente ou mal formatado", http.StatusUnauthorized)
+			return
+		}
+
+		token := strings.TrimPrefix(authHeader, "Bearer ")
+		clientID := os.Getenv("GOOGLE_CLIENT_ID")
+
+		payload, err := idtoken.Validate(context.Background(), token, clientID)
+		if err != nil {
+			http.Error(w, "Token inválido ou expirado", http.StatusUnauthorized)
+			return
+		}
+
+		email, ok := payload.Claims["email"].(string)
+		adminEmail := os.Getenv("ADMIN_EMAIL")
+		if !ok || email != adminEmail {
+			http.Error(w, "Acesso negado: e-mail não autorizado", http.StatusForbidden)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	}
+}
 
 func main() {
 	err := godotenv.Load()
@@ -38,10 +69,11 @@ func main() {
 	}))
 
 	r.Get("/api/amigurumis", handlers.GetAllAmigurumis)
-	r.Post("/api/amigurumis", handlers.CreateAmigurumi)
 	r.Get("/api/amigurumis/{id}", handlers.GetAmigurumiByID)
-	r.Put("/api/amigurumis/{id}", handlers.UpdateAmigurumi)
-	r.Delete("/api/amigurumis/{id}", handlers.DeleteAmigurumi)
+
+	r.Post("/api/amigurumis", AuthMiddleware(handlers.CreateAmigurumi))
+	r.Put("/api/amigurumis/{id}", AuthMiddleware(handlers.UpdateAmigurumi))
+	r.Delete("/api/amigurumis/{id}", AuthMiddleware(handlers.DeleteAmigurumi))
 
 	port := os.Getenv("PORT")
 	if port == "" {
