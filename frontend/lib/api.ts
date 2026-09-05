@@ -1,7 +1,7 @@
 import { Amigurumi } from "../types"
 
 export async function getAmigurumis(): Promise<Amigurumi[]>{
-    const res = await fetch("http:localhost:8080/api/amigurumis", {
+    const res = await fetch("http://localhost:8080/api/amigurumis", {
         cache: "no-store",
     })
 
