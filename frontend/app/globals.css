@@ -46,6 +46,10 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-amigu-base: #ECFAE5;
+  --color-amigu-light: #DDF6D2;
+  --color-amigu-mid: #CAE8BD;
+  --color-amigu-dark: #B0DB9C;
 }
 
 :root {
@@ -126,5 +130,21 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@keyframes scroll-wheel {
+    0% { transform: translateY(-4px); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: translateY(8px); opacity: 0; }
+}
+
+.animate-scroll-wheel {
+    animation: scroll-wheel 1.5s infinite ease-in-out;
+}
+
+@media (pointer: fine) {
+  body, a, button, input, select, textarea, [role="button"], label {
+    cursor: none !important;
   }
 }
