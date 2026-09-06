@@ -30,6 +30,7 @@ func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 
 		payload, err := idtoken.Validate(context.Background(), token, clientID)
 		if err != nil {
+			log.Printf("[Auth] Erro ao validar token: %v\n", err)
 			http.Error(w, "Token inválido ou expirado", http.StatusUnauthorized)
 			return
 		}
@@ -37,6 +38,7 @@ func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		email, ok := payload.Claims["email"].(string)
 		adminEmail := os.Getenv("ADMIN_EMAIL")
 		if !ok || email != adminEmail {
+			log.Printf("[Auth] Acesso negado: email '%s' diferente de admin '%s'\n", email, adminEmail)
 			http.Error(w, "Acesso negado: e-mail não autorizado", http.StatusForbidden)
 			return
 		}
@@ -61,8 +63,21 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	allowedOrigins := []string{"http://localhost:3000"}
+	if envOrigins := os.Getenv("ALLOWED_ORIGINS"); envOrigins != "" {
+		for _, o := range strings.Split(envOrigins, ",") {
+			if trimmed := strings.TrimSpace(o); trimmed != "" {
+				allowedOrigins = append(allowedOrigins, trimmed)
+			}
+		}
+	} else if frontendURL := os.Getenv("FRONTEND_URL"); frontendURL != "" {
+		if trimmed := strings.TrimSpace(frontendURL); trimmed != "" {
+			allowedOrigins = append(allowedOrigins, trimmed)
+		}
+	}
+
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedOrigins:   allowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: true,

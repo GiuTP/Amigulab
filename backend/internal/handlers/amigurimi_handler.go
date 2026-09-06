@@ -29,6 +29,7 @@ func GetAllAmigurumis(w http.ResponseWriter, r *http.Request) {
 	amigurumis, err := repository.GetAll(r.Context(), limit, offset)
 	if err != nil {
 		http.Error(w, "Erro ao buscar os projetos", http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
