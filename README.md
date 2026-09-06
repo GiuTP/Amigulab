@@ -52,7 +52,7 @@
 
 ## 🧶 Sobre o Projeto
 
-![Amigulab Banner](frontend/public/juninos.jpg)
+![Amigulab Banner](frontend/public/home.png)
 
 **Amigulab** é uma vitrine digital e diário de artesanato criado para expor peças autorais de crochê/amigurumi.
 
