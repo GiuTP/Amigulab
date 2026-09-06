@@ -10,6 +10,9 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Amigulab",
   description: "Portfólio de amigurumis feitos à mão",
+  icons:{
+    icon: "/favicon.ico",
+  },
 }
 
 export default function RootLayout({

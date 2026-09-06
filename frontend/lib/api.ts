@@ -1,7 +1,9 @@
 import { Amigurumi } from "../types"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
+
 export async function getAmigurumis(): Promise<Amigurumi[]>{
-    const res = await fetch("http://localhost:8080/api/amigurumis", {
+    const res = await fetch(`${API_URL}/api/amigurumis`, {
         cache: "no-store",
     })
 
@@ -13,7 +15,7 @@ export async function getAmigurumis(): Promise<Amigurumi[]>{
 }
 
 export async function getAmigurumiByID(id:string): Promise<Amigurumi> {
-    const res = await fetch(`http://localhost:8080/api/amigurumis/${id}`, {
+    const res = await fetch(`${API_URL}/api/amigurumis/${id}`, {
         cache:"no-store",
     })
     
@@ -27,7 +29,7 @@ export async function getAmigurumiByID(id:string): Promise<Amigurumi> {
 export type CreateAmigurumiInput = Omit<Amigurumi, 'id' | 'created_at'>;
 
 export async function createAmigurumi(data: CreateAmigurumiInput, token:string) {
-    const res = await fetch("http://localhost:8080/api/amigurumis", {
+    const res = await fetch(`${API_URL}/api/amigurumis`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -37,24 +39,28 @@ export async function createAmigurumi(data: CreateAmigurumiInput, token:string) 
     })
 
     if (!res.ok) {
-        throw new Error("Erro ao salvar o projeto no banco de dados")
+        const errorText = await res.text().catch(() => "")
+        throw new Error(errorText || "Erro ao salvar o projeto no banco de dados")
     }
 
     return res.json()
 }
 
 export async function deleteAmigurumi(id: string, token: string) {
-    const res = await fetch(`http://localhost:8080/api/amigurumis/${id}`, {
+    const res = await fetch(`${API_URL}/api/amigurumis/${id}`, {
         method: "DELETE",
         headers: {
             "Authorization": `Bearer ${token}`
         }
     })
-    if (!res.ok) throw new Error("Erro ao deletar")
+    if (!res.ok) {
+        const errorText = await res.text().catch(() => "")
+        throw new Error(errorText || "Erro ao deletar")
+    }
 }
 
 export async function updateAmigurumi(id: string, data: CreateAmigurumiInput, token: string) {
-    const res = await fetch(`http://localhost:8080/api/amigurumis/${id}`, {
+    const res = await fetch(`${API_URL}/api/amigurumis/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -62,6 +68,9 @@ export async function updateAmigurumi(id: string, data: CreateAmigurumiInput, to
         },
         body: JSON.stringify(data),
     })
-    if (!res.ok) throw new Error("Erro ao atualizar")
+    if (!res.ok) {
+        const errorText = await res.text().catch(() => "")
+        throw new Error(errorText || "Erro ao atualizar")
+    }
     return res.json()
 }

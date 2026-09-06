@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { getAmigurumis } from "@/lib/api"
 import { Amigurumi } from "@/types"
 import ContactForm from "@/components/ContactForm"
@@ -15,20 +16,20 @@ export default async function Home() {
   }
   return (
     <>
-      <div id="home" className="relative min-h-screen w-full flex items-center">
+      <div id="home" className="relative min-h-screen w-full flex items-center pt-16 md:pt-0">
         
-        <div className="w-full max-w-7xl mx-auto px-8 md:px-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         
-        <div className="flex flex-col items-start gap-4 z-10">
+        <div className="flex flex-col items-center text-center lg:items-start lg:text-left gap-4 z-10">
           <span className="text-emerald-800 font-bold tracking-wider uppercase text-sm">
             Bem-vindo(a)
           </span>
           
-          <h1 className="text-6xl md:text-8xl font-bold text-zinc-900 tracking-tight">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold text-zinc-900 tracking-tight">
             Amigulab
           </h1>
           
-          <p className="text-lg text-zinc-500 max-w-md leading-relaxed mt-2">
+          <p className="text-base sm:text-lg text-zinc-500 max-w-md leading-relaxed mt-2">
             Amostra de trabalhos artesanais em crochê, unindo linhas, agulhas e muita dedicação nas peças criadas por Giuliano.
           </p>
           
@@ -55,10 +56,15 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="w-full h-[60vh] lg:h-[80vh] rounded-2xl bg-indigo-100 relative overflow-hidden flex items-center justify-center border-2 border-dashed border-indigo-300">
-            <span className="text-indigo-400 font-medium text-center px-4">
-              [Foto com filtro de opacidade aqui]
-            </span>
+        <div className="w-full h-[60vh] lg:h-[80vh] rounded-2xl relative overflow-hidden flex items-center justify-center">
+            <Image
+              src="/juninos.jpg"
+              alt="Trabalhos amigurumi juninos"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+              priority
+            />
         </div>
 
       </div>
@@ -75,10 +81,14 @@ export default async function Home() {
         <section id="sobre" className="py-24 px-8 md:px-16 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
           {/* Coluna da Esquerda (Imagem) */}
-          <div className="w-full h-[500px] lg:h-[600px] rounded-2xl bg-indigo-100 relative overflow-hidden flex items-center justify-center border-2 border-dashed border-indigo-300 shadow-sm">
-              <span className="text-indigo-400 font-medium text-center px-4">
-                [Foto com filtro de opacidade aqui]
-              </span>
+          <div className="w-full h-[500px] lg:h-[600px] rounded-2xl relative overflow-hidden flex items-center justify-center shadow-sm order-last lg:order-none">
+            <Image
+              src="/perfil.jpg"
+              alt="Foto de perfil do Giuliano"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
           </div>
 
           {/* Coluna da Direita (Texto e Contatos) */}
@@ -109,11 +119,11 @@ export default async function Home() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+              <div className="flex flex-row flex-wrap items-center gap-6 sm:gap-10 mt-4">
                 
                 {/* E-mail */}
                 <div className="flex items-center gap-4 group">
-                  <div className="w-12 h-12 rounded-full bg-amigu-dark flex items-center justify-center text-emerald-950 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-full bg-amigu-dark flex items-center justify-center text-emerald-950 group-hover:scale-110 transition-transform shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect width="20" height="16" x="2" y="4" rx="2"/>
                       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
@@ -129,7 +139,7 @@ export default async function Home() {
 
                 {/* Instagram */}
                 <div className="flex items-center gap-4 group">
-                  <div className="w-12 h-12 rounded-full bg-amigu-dark flex items-center justify-center text-emerald-950 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-full bg-amigu-dark flex items-center justify-center text-emerald-950 group-hover:scale-110 transition-transform shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
                       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
@@ -169,27 +179,27 @@ export default async function Home() {
           </h2>
         </div>
 
-        {/* Grade Desalinhada (3 Colunas) */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-20">
+        {/* Grade Responsiva Balanceada */}
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mb-20">
           {featured.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center py-16 text-center text-zinc-400 font-medium">
               Nenhum projeto em destaque no momento.
             </div>
           ) : (
             featured.map((item, index) => {
-              const offsetClass = index === 1 ? "md:mt-24" : index === 2 ? "md:mt-12" : ""
+              const offsetClass = index === 1 ? "lg:mt-20" : index === 2 ? "lg:mt-10" : ""
               return (
                 <Link
                   key={item.id}
                   href={`/work/${item.id}`}
-                  className={`flex flex-col gap-4 group ${offsetClass}`}
+                  className={`flex flex-col gap-4 group max-w-sm mx-auto sm:max-w-none w-full ${offsetClass}`}
                 >
                   <div className="w-full aspect-[4/5] rounded-2xl bg-zinc-100 border border-zinc-200 flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:-translate-y-2 shadow-sm">
                     {item.image_url ? (
                       <img
                         src={item.image_url}
                         alt={item.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-center"
                       />
                     ) : (
                       <span className="text-zinc-400 font-medium px-4 text-center text-sm">
@@ -257,10 +267,10 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-row flex-wrap items-center gap-6 sm:gap-10">
               {/* Card de Instagram */}
-              <div className="flex items-center gap-5 group">
-                <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-amigu-dark group-hover:bg-amigu-dark group-hover:text-emerald-950 transition-colors shadow-sm">
+              <div className="flex items-center gap-4 group">
+                <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-amigu-dark group-hover:bg-amigu-dark group-hover:text-emerald-950 transition-colors shadow-sm shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
@@ -281,8 +291,8 @@ export default async function Home() {
               </div>
 
               {/* Card de E-mail */}
-              <div className="flex items-center gap-5 group">
-                <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-amigu-dark group-hover:bg-amigu-dark group-hover:text-emerald-950 transition-colors shadow-sm">
+              <div className="flex items-center gap-4 group">
+                <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-amigu-dark group-hover:bg-amigu-dark group-hover:text-emerald-950 transition-colors shadow-sm shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect width="20" height="16" x="2" y="4" rx="2"/>
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>

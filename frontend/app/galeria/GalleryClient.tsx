@@ -154,12 +154,12 @@ export default function GalleryClient({ items }: { items: Amigurumi[] }) {
                             <div key={item.id} className="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm flex flex-col h-full transition-all hover:shadow-md">
 
                                 {/* Imagem */}
-                                <div className="w-full h-56 bg-zinc-100 flex items-center justify-center relative border-b border-zinc-100 shrink-0 overflow-hidden">
+                                <div className="w-full h-64 sm:h-72 bg-zinc-100 flex items-center justify-center relative border-b border-zinc-100 shrink-0 overflow-hidden group">
                                     {item.image_url ? (
                                         <img
                                             src={item.image_url}
                                             alt={item.name}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                                         />
                                     ) : (
                                         <span className="text-zinc-400 font-medium text-sm">[Sem foto]</span>
